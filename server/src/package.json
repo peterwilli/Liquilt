@@ -1,0 +1,17 @@
+{
+  "name": "liquilt-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main.js"
+  },
+  "author": "Peter Willemsen",
+  "license": "MIT",
+  "dependencies": {
+    "@supercharge/strings": "^1.28.0",
+    "multiparty": "^4.2.3",
+    "node-static": "^0.7.11"
+  }
+}

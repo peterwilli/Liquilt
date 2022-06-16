@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  liquilt_uploader:
+    build: ./
+    volumes:
+      - "./src:/src"
+      - "./quilts:/src/static/quilts"
+    logging:
+      driver: "json-file"
+      options:
+          max-size: "5m"
+    restart: always
+    ports:
+      - "0.0.0.0:2091:8080"

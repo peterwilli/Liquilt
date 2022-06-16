@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width,initial-scale=1'>
+	<title>Liquilt Viewer</title>
+	<script src='liquilt.js'></script>
+</head>
+
+<body>
+</body>
+
+<script>
+	let liquilt = document.createElement('liquilt-viewer');
+	let uri = window.location.href.split("#")[0].replace("/viewer.html", "");
+	liquilt.render = uri + "/quilts/" + window.location.hash.slice(1) + ".mp4";
+	document.body.appendChild(liquilt);
+</script>
+</html>
