@@ -11,6 +11,10 @@ Got a Looking Glass? With Liquilt you can share them on the web in the fastest w
 
 See https://emeraldodin.com/liquilt_demo
 
+# I don't want to run a server!
+
+I started a little hosting server at [liquilt.org](http://liquilt.org) (be gentle it runs on a Raspberry Pi 4)
+
 # How to get started
 
 I assume you have Python and Pip installed
@@ -23,7 +27,8 @@ I assume you have Python and Pip installed
 - Now you can use the component as shown in the example folder! (Note, it needs to be hosted on a (local) static file server)
     - You can also use the [Liquilt uploader](https://emeraldodin.com/liquilt_uploader) to upload your result if you don't want to host a page.
 
+
 # To do
 
-- [ ] A server-side hosting platform
+- [x] A server-side hosting platform
 - [ ] So far only mouse works, we need support for mobile
