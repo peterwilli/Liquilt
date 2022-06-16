@@ -1,5 +1,7 @@
 # Create real-time, fast 3D views of your quilts!
 
+[Demo video here!](https://www.youtube.com/watch?v=JwtFb_bqtG4)
+
 Got a Looking Glass? With Liquilt you can share them on the web in the fastest way possible! We convert your quilt into a specially crafted file to display them fast no matter what you run it on!
 
 - Fast, web-components based library
@@ -7,7 +9,7 @@ Got a Looking Glass? With Liquilt you can share them on the web in the fastest w
 - Pre-computed, real-time rendering
 - Open source - feel free to help out!
 
-# Demo
+# Live Demo
 
 See https://emeraldodin.com/liquilt_demo
 
