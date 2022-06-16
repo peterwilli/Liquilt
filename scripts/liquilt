@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ ! $@ ]]; then
+    echo "Please provide a quilt input + a mp4 output path!"
+else
+    python3 -m liquilt.cli $@
+fi
