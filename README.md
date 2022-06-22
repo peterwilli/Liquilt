@@ -33,4 +33,4 @@ I assume you have Python and Pip installed
 # To do
 
 - [x] A server-side hosting platform
-- [ ] So far only mouse works, we need support for mobile
+- [x] So far only mouse works, we need support for mobile

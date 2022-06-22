@@ -5,7 +5,7 @@
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width,initial-scale=1'>
 	<title>Liquilt Viewer</title>
-	<script src='liquilt.js'></script>
+	<script src='liquilt-0.2.0.js'></script>
 </head>
 
 <body>
@@ -14,7 +14,7 @@
 <script>
 	let liquilt = document.createElement('liquilt-viewer');
 	let uri = window.location.href.split("#")[0].replace("/viewer.html", "");
-	liquilt.render = uri + "/quilts/" + window.location.hash.slice(1) + ".mp4";
+	liquilt.render = uri + "/quilts/" + window.location.hash.slice(1) + ".webm";
 	document.body.appendChild(liquilt);
 </script>
 </html>

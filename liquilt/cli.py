@@ -4,13 +4,16 @@ import sys
 
 if __name__ == "__main__":
     image_path = sys.argv[1]
-    output_mp4 = sys.argv[2]
+    output_webm = sys.argv[2]
     im = iio.imread(image_path)
     w = 420
     h = 560
-    with iio2.get_writer(output_mp4, 
+    with iio2.get_writer(output_webm, 
             format='FFMPEG',
-            mode='I',
+            codec="libvpx-vp9",
+            mode="I",
+            input_params=[],
+            output_params=["-crf", "40"],
             fps=1) as ffmpeg_w:
 
         for y in range(0, 6):

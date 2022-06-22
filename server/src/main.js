@@ -15,7 +15,7 @@ http.createServer(function (req, res) {
                 const quiltTmpPath = files['quilt'][0].path;
                 console.log('quiltTmpPath', quiltTmpPath);
                 const key = Str.random(50)
-                const out = path.join(__dirname, "static", "quilts", `${key}.mp4`)
+                const out = path.join(__dirname, "static", "quilts", `${key}.webm`)
                 exec(`liquilt "${quiltTmpPath}" "${out}"`, (error, stdout, stderr) => {
                     console.log("done", error, stdout, stderr);
                     if (error) {

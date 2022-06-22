@@ -6,7 +6,7 @@
 
 	import { onMount } from 'svelte';
 
-	function onMouseMove(e) {
+	function onPointerMove(e) {
 		let width = containerMain.clientWidth;
 		let mX = 0;
 		if(e) {
@@ -18,18 +18,34 @@
 		imgMain.src = image;
 	}
 
+	async function waitVideoToShowImage(ctx, video) {
+		return new Promise((resolve, reject) => {
+			let interval = setInterval(function() {
+				ctx.drawImage(video, 0, 0, 1, 1);
+				const pixel = ctx.getImageData(0, 0, 1, 1);
+				console.log(pixel.data[3]);
+				if(pixel.data[3] > 0) {
+					resolve();
+					clearInterval(interval)
+				}
+			}, 100);
+		});
+	}
+
 	async function extractFrames() {
 		let video = document.createElement('video');
 		video.src = render;
 		video.crossOrigin = "anonymous";
+		video.style = "opacity: 0;";
+		document.body.append(video);
 
 		let blobs = [];
 		let canvas = document.createElement('canvas');
 		canvas.width = imageWidth;
 		canvas.height = imageHeight;
 	    let ctx = canvas.getContext('2d');
-
-		return new Promise(function(resolve, reject) {
+		await waitVideoToShowImage(ctx, video);
+		return new Promise((resolve, reject) => {
 			let snapshot = function() {
 				ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 				canvas.toBlob(function(blob) {
@@ -40,22 +56,22 @@
 						resolve(blobs);
 						return;
 					}
-					video.currentTime += 1;
 				});
+				video.currentTime += 1;
 			};
 			video.addEventListener('canplay', snapshot);
 			video.currentTime = 0;
 		});
 	}
 
-	function initMouseMove() {
-		imgMain.addEventListener("mousemove", onMouseMove);
-		onMouseMove();
+	function initPointerMove() {
+		imgMain.addEventListener("pointermove", onPointerMove);
+		onPointerMove();
 	}
 
 	onMount(async function() {
 		blobs = await extractFrames();
-		initMouseMove();
+		initPointerMove();
 	});
 </script>
 
@@ -80,6 +96,7 @@
 	object-fit: contain;
 	height: 100%;
 	width: 100%;
+	touch-action: none;
 }
 .hidden {
 	display: none

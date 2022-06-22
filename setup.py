@@ -1,7 +1,7 @@
 import setuptools
 setuptools.setup(
     name='liquilt',
-    version='0.1',
+    version='0.2',
     scripts=['./scripts/liquilt'],
     author='Peter Willemsen <peter@codebuffet.co>',
     description='Create 3D views of a quilt!',
