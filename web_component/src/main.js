@@ -1,3 +1,5 @@
-import App from './App.svelte';
+import Viewer from './Viewer.svelte';
+import initErrorReporting from "./error_reporting"
 
-export default App;
+initErrorReporting();
+export default Viewer;

@@ -53,6 +53,7 @@
             let newVideo = document.createElement('video');
             newVideo.src = video.src;
             newVideo.currentTime = i;
+            newVideo.oncontextmenu = "return false;";
             newVideo.style.opacity = 0;
             newVideo.addEventListener("seeked", newVideoReady);
             videoHolder.appendChild(newVideo);
@@ -61,9 +62,8 @@
         initPointerMove();
     }
 
-    onMount(async function () {
+    onMount(function () {
         video.addEventListener("canplay", canPlay);
-        window.addEventListener("resize", onResize);
     });
 </script>
 
@@ -72,9 +72,10 @@
         {#if !videosReady}
             <span>Loading...</span>
         {/if}
-        <div bind:this={videoHolder} class="video-holder" class:hidden="{!videosReady}">
+        <div bind:this={videoHolder} class="video-holder">
             <!-- svelte-ignore a11y-media-has-caption -->
             <video
+                style="opacity: 0"
                 oncontextmenu="return false;"
                 bind:this={video}
                 src={render}
@@ -84,9 +85,6 @@
 </main>
 
 <style>
-    .hidden {
-        display: none;
-    }
     .container {
         position: absolute;
         left: 0;
