@@ -9,10 +9,10 @@ RUN echo "Installing dependencies..." && \
 	rm -rf /var/lib/apt/lists/*
 
 RUN echo "Installing Python dependencies" && \
-    pip3 install liquilt
+    pip3 install liquilt==0.2
 
 # Add dev user
-RUN useradd -ms /bin/zsh liquilt && \
+RUN useradd -ms /bin/bash liquilt && \
     usermod -aG sudo liquilt && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 

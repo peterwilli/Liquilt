@@ -1,3 +1,3 @@
-import App from './App.VideoCopy.svelte';
+import App from './App.svelte';
 
 export default App;

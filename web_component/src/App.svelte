@@ -1,104 +1,112 @@
-<svelte:options tag="liquilt-viewer" immutable={true} /> 
+<svelte:options tag="liquilt-viewer" immutable={true} />
+
 <script>
-	export let render, imageWidth = 420, imageHeight = 560;
-	let imgMain, containerMain;
-	let blobs = null;
+    export let render;
+    let containerMain;
+    let video = null;
+    let videoHolder = null;
+    let durSeconds = null;
+    let videosReady = false;
+    let lastImageIdx = null;
+    let videos = [];
 
-	import { onMount } from 'svelte';
+    import { onMount } from "svelte";
 
-	function onPointerMove(e) {
-		let width = containerMain.clientWidth;
-		let mX = 0;
-		if(e) {
-			mX = e.layerX;
-		}
-		let pctX = mX / width;
-		let imageIdx = Math.floor(pctX * blobs.length);
-		let image = blobs[imageIdx];
-		imgMain.src = image;
-	}
+    function onPointerMove(e) {
+        let width = containerMain.clientWidth;
+        let mX = 0;
+        if (e) {
+            mX = e.layerX;
+        }
+        let pctX = mX / width;
+        let imageIdx = Math.floor(pctX * durSeconds);
+        if (lastImageIdx != imageIdx) {
+            if(lastImageIdx != null) {
+                videos[lastImageIdx].style.opacity = 0;
+            }
+            videos[imageIdx].style.opacity = 1;
+            lastImageIdx = imageIdx;
+        }
+    }
 
-	async function waitVideoToShowImage(ctx, video) {
-		return new Promise((resolve, reject) => {
-			let interval = setInterval(function() {
-				ctx.drawImage(video, 0, 0, 1, 1);
-				const pixel = ctx.getImageData(0, 0, 1, 1);
-				console.log(pixel.data[3]);
-				if(pixel.data[3] > 0) {
-					resolve();
-					clearInterval(interval)
-				}
-			}, 100);
-		});
-	}
+    function initPointerMove() {
+        videoHolder.addEventListener("pointermove", onPointerMove);
+        onPointerMove();
+    }
 
-	async function extractFrames() {
-		let video = document.createElement('video');
-		video.src = render;
-		video.crossOrigin = "anonymous";
-		video.style = "opacity: 0;";
-		document.body.append(video);
+    function canPlay() {
+        durSeconds = Math.floor(video.duration);
+        video.removeEventListener("canplay", canPlay);
+        videos.push(video);
 
-		let blobs = [];
-		let canvas = document.createElement('canvas');
-		canvas.width = imageWidth;
-		canvas.height = imageHeight;
-	    let ctx = canvas.getContext('2d');
-		await waitVideoToShowImage(ctx, video);
-		return new Promise((resolve, reject) => {
-			let snapshot = function() {
-				ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-				canvas.toBlob(function(blob) {
-					blobs.push(URL.createObjectURL(blob));
-					if (video.currentTime == video.duration) {
-						video.removeEventListener('canplay', snapshot);
-						video.remove(); 
-						resolve(blobs);
-						return;
-					}
-				});
-				video.currentTime += 1;
-			};
-			video.addEventListener('canplay', snapshot);
-			video.currentTime = 0;
-		});
-	}
+        let toLoadVideos = durSeconds - 1;
 
-	function initPointerMove() {
-		imgMain.addEventListener("pointermove", onPointerMove);
-		onPointerMove();
-	}
+        function newVideoReady(e) {
+            toLoadVideos--;
+            if(toLoadVideos == 0) {
+                videosReady = true;
+            }
+            e.target.removeEventListener("seeked", newVideoReady);
+        }
 
-	onMount(async function() {
-		blobs = await extractFrames();
-		initPointerMove();
-	});
+        for(var i = 1; i < durSeconds; i++) {
+            let newVideo = document.createElement('video');
+            newVideo.src = video.src;
+            newVideo.currentTime = i;
+            newVideo.style.opacity = 0;
+            newVideo.addEventListener("seeked", newVideoReady);
+            videoHolder.appendChild(newVideo);
+            videos.push(newVideo);
+        }
+        initPointerMove();
+    }
+
+    onMount(async function () {
+        video.addEventListener("canplay", canPlay);
+        window.addEventListener("resize", onResize);
+    });
 </script>
 
 <main>
-	<div bind:this="{containerMain}" class="container">
-		{#if blobs == null}
-			<span>Loading...</span>
-		{/if}
-		<img alt="3D view" bind:this="{imgMain}" class:hidden="{blobs == null}" />
-	</div>
+    <div bind:this={containerMain} class="container">
+        {#if !videosReady}
+            <span>Loading...</span>
+        {/if}
+        <div bind:this={videoHolder} class="video-holder" class:hidden="{!videosReady}">
+            <!-- svelte-ignore a11y-media-has-caption -->
+            <video
+                oncontextmenu="return false;"
+                bind:this={video}
+                src={render}
+            />
+        </div>
+    </div>
 </main>
 
 <style>
-.container {
-	position: absolute;
-	left: 0;
-	right:0;
-	top: 0;
-	bottom: 0;
-}
-.container img {
-	object-fit: contain;
-	height: 100%;
-	width: 100%;
-	touch-action: none;
-}
-.hidden {
-	display: none
-}
+    .hidden {
+        display: none;
+    }
+    .container {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        text-align: center;
+    }
+    .container video {
+        object-fit: contain;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+    .container .video-holder {
+        touch-action: none;
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
 </style>
